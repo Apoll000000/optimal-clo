@@ -1,10 +1,10 @@
 "use client";
 
+import { Suspense, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { CheckCircle2 } from "lucide-react";
 
-export default function SubscriptionSuccess() {
+function SubscriptionSuccessContent() {
     const params = useSearchParams();
     const router = useRouter();
 
@@ -42,5 +42,13 @@ export default function SubscriptionSuccess() {
                 </button>
             </div>
         </div>
+    );
+}
+
+export default function SubscriptionSuccess() {
+    return (
+        <Suspense fallback={null}>
+            <SubscriptionSuccessContent />
+        </Suspense>
     );
 }
