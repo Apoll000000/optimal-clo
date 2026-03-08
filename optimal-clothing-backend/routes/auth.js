@@ -26,13 +26,16 @@ router.get(
         const returnTo = req.session.returnTo || "/app";
         delete req.session.returnTo;
 
-        // ALWAYS go back to /login with next param
-        res.redirect(`${frontendBase}/login?next=${encodeURIComponent(returnTo)}`);
+        // Save session explicitly before redirect to avoid race conditions on serverless.
+        req.session.save(() => {
+            res.redirect(`${frontendBase}/login?next=${encodeURIComponent(returnTo)}`);
+        });
     }
 );
 
 // get current user
 router.get("/me", (req, res) => {
+    res.setHeader("Cache-Control", "no-store");
     if (!req.user) return res.status(401).json({ user: null });
     res.json({
         user: {
