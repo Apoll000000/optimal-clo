@@ -21,8 +21,7 @@ import {
     Sparkles,
     ShieldCheck,
     BadgeCheck,
-    ArrowUpRight,
-    Crown
+    ArrowUpRight
 } from "lucide-react";
 
 type Variant = {
@@ -246,7 +245,6 @@ export default function AppHome() {
             window.removeEventListener(CART_EVENT, onCart);
             document.removeEventListener("visibilitychange", onVis);
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     // ✅ featured: always 3, most recent

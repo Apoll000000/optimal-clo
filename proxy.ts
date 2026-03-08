@@ -5,7 +5,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 // protect these routes
 const PROTECTED_PREFIXES = ["/app", "/checkout", "/cart"]; // adjust to your needs
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
     const { pathname } = req.nextUrl;
 
     const isProtected = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
@@ -21,11 +21,11 @@ export async function middleware(req: NextRequest) {
         });
 
         if (res.ok) return NextResponse.next();
-    } catch (e) {
+    } catch {
         // ignore
     }
 
-    // not logged in → send to login and keep where they wanted to go
+    // not logged in -> send to login and keep where they wanted to go
     const loginUrl = req.nextUrl.clone();
     loginUrl.pathname = "/login";
     loginUrl.searchParams.set("next", pathname);

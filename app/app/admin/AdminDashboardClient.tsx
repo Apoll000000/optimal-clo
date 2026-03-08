@@ -468,7 +468,6 @@ export default function AdminDashboardClient({ user }: Props) {
     useEffect(() => {
         loadOrders();
         loadUsers();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // products reload when search/filter changes (with debounce)

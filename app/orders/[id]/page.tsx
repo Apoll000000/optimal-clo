@@ -52,21 +52,6 @@ function Pill({ children }: { children: React.ReactNode }) {
     );
 }
 
-function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
-    return (
-        <input
-            {...props}
-            className={clsx(
-                "w-full rounded-2xl px-4 py-3 text-sm",
-                "border border-[color:var(--border)] bg-[color:var(--soft-bg)]",
-                "text-[color:var(--foreground)] placeholder:text-[color:var(--muted)]",
-                "outline-none focus:ring-2 focus:ring-red-500/30",
-                props.className
-            )}
-        />
-    );
-}
-
 function Textarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
     return (
         <textarea
@@ -296,7 +281,6 @@ export default function OrderDetailsPage() {
             window.removeEventListener(CART_EVENT, onCart);
             document.removeEventListener("visibilitychange", onVis);
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     const totals = useMemo(() => {

@@ -9,7 +9,6 @@ import {
     Menu,
     LogOut,
     User as UserIcon,
-    Settings as SettingsIcon,
     Shield,
     ChevronDown,
 } from "lucide-react";

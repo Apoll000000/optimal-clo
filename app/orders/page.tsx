@@ -184,7 +184,6 @@ export default function OrdersPage() {
             window.removeEventListener(CART_EVENT, onCart);
             document.removeEventListener("visibilitychange", onVis);
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     const sorted = useMemo(() => {

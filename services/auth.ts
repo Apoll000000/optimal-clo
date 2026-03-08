@@ -39,7 +39,6 @@ export function useAuth() {
 
     useEffect(() => {
         refresh();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return { user, loading, refresh, logout };

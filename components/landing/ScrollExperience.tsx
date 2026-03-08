@@ -150,7 +150,7 @@ export default function ScrollExperience() {
     const outro = useTransform(scrollYProgress, [0.84, 0.92, 1.0], [0, 1, 1]);
 
     const isDark = useHtmlDark();
-    const [designUrl, setDesignUrl] = useState("/designs/skull-headphones.png");
+    const designUrl = "/designs/skull-headphones.png";
 
     const [menuOpen, setMenuOpen] = useState(false);
 
