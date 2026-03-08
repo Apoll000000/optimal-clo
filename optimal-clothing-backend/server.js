@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const passport = require("passport");
 
 const setupPassport = require("./config/passport");
@@ -26,6 +27,7 @@ function normalizeUrl(value) {
 const hasStripeSecrets =
     !!process.env.STRIPE_SECRET_KEY && !!process.env.STRIPE_WEBHOOK_SECRET;
 const frontendOrigin = normalizeUrl(process.env.FRONTEND_URL);
+const isProd = process.env.NODE_ENV === "production" || !!process.env.VERCEL;
 
 if (hasStripeSecrets) {
     app.post(
@@ -46,16 +48,26 @@ app.use(
     })
 );
 
+app.set("trust proxy", 1);
+
 // session cookie (used by passport)
 app.use(
     session({
         secret: process.env.SESSION_SECRET || "change-this-session-secret",
+        store: process.env.MONGODB_URI
+            ? MongoStore.create({
+                mongoUrl: process.env.MONGODB_URI,
+                ttl: 60 * 60 * 24 * 7, // 7 days
+            })
+            : undefined,
+        proxy: true,
         resave: false,
         saveUninitialized: false,
         cookie: {
             httpOnly: true,
-            sameSite: "lax",
-            secure: false, // true in production https
+            sameSite: isProd ? "none" : "lax",
+            secure: isProd,
+            maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
         },
     })
 );
