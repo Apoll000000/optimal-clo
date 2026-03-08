@@ -25,7 +25,7 @@ function clsx(...a: Array<string | false | undefined>) {
 
 const CART_EVENT = "optimal:cart-updated";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(/\/+$/, "");
 
 async function updateMyProfile(input: { name: string; avatarFile?: File | null }) {
     const fd = new FormData();

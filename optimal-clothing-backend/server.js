@@ -19,8 +19,13 @@ const subscriptionRoutes = require("./routes/subscription.routes");
 
 const app = express();
 
+function normalizeUrl(value) {
+    return String(value || "").trim().replace(/\/+$/, "");
+}
+
 const hasStripeSecrets =
     !!process.env.STRIPE_SECRET_KEY && !!process.env.STRIPE_WEBHOOK_SECRET;
+const frontendOrigin = normalizeUrl(process.env.FRONTEND_URL);
 
 if (hasStripeSecrets) {
     app.post(
@@ -36,7 +41,7 @@ app.use(express.json({ limit: "5mb" }));
 // CORS (important for cookies)
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL,
+        origin: frontendOrigin || true,
         credentials: true,
     })
 );

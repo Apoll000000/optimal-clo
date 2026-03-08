@@ -2,12 +2,13 @@ const express = require("express");
 const passport = require("passport");
 
 const router = express.Router();
+const frontendBase = String(process.env.FRONTEND_URL || "").trim().replace(/\/+$/, "");
 
 // start Google login
 router.get(
     "/google",
     (req, res, next) => {
-        // ✅ always store ONLY path (not full origin)
+        // always store ONLY path (not full origin)
         const returnTo = req.query.returnTo || "/app";
         req.session.returnTo = returnTo;
         next();
@@ -19,16 +20,14 @@ router.get(
 router.get(
     "/google/callback",
     passport.authenticate("google", {
-        failureRedirect: `${process.env.FRONTEND_URL}/login`,
+        failureRedirect: `${frontendBase}/login`,
     }),
     (req, res) => {
         const returnTo = req.session.returnTo || "/app";
         delete req.session.returnTo;
 
-        // ✅ ALWAYS go back to /login with next param
-        res.redirect(
-            `${process.env.FRONTEND_URL}/login?next=${encodeURIComponent(returnTo)}`
-        );
+        // ALWAYS go back to /login with next param
+        res.redirect(`${frontendBase}/login?next=${encodeURIComponent(returnTo)}`);
     }
 );
 

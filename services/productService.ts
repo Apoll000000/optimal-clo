@@ -1,6 +1,6 @@
 import { Product } from "@/types";
 
-const BASE = process.env.NEXT_PUBLIC_API_URL;
+const BASE = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(/\/+$/, "");
 
 export async function getProducts(params: {
     page: number;
