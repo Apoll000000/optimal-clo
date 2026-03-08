@@ -19,11 +19,16 @@ const subscriptionRoutes = require("./routes/subscription.routes");
 
 const app = express();
 
-app.post(
-    "/api/stripe/webhook",
-    express.raw({ type: "application/json" }),
-    require("./routes/stripeWebhook")
-);
+const hasStripeSecrets =
+    !!process.env.STRIPE_SECRET_KEY && !!process.env.STRIPE_WEBHOOK_SECRET;
+
+if (hasStripeSecrets) {
+    app.post(
+        "/api/stripe/webhook",
+        express.raw({ type: "application/json" }),
+        require("./routes/stripeWebhook")
+    );
+}
 
 // basic middleware
 app.use(express.json({ limit: "5mb" }));
@@ -39,7 +44,7 @@ app.use(
 // session cookie (used by passport)
 app.use(
     session({
-        secret: process.env.SESSION_SECRET,
+        secret: process.env.SESSION_SECRET || "change-this-session-secret",
         resave: false,
         saveUninitialized: false,
         cookie: {
@@ -64,7 +69,20 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/checkout", checkoutRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
-app.use("/api/subscriptions/stripe", require("./routes/stripeSubscriptions"));
+
+if (hasStripeSecrets) {
+    app.use("/api/subscriptions/stripe", require("./routes/stripeSubscriptions"));
+} else {
+    console.warn("Stripe env vars are missing. Stripe routes are disabled.");
+
+    app.all("/api/stripe/webhook", (_req, res) => {
+        res.status(503).json({ message: "Stripe webhook is not configured on server." });
+    });
+
+    app.all("/api/subscriptions/stripe", (_req, res) => {
+        res.status(503).json({ message: "Stripe subscriptions are not configured on server." });
+    });
+}
 
 app.get("/api/health", (req, res) => res.json({ ok: true }));
 app.get("/", (req, res) => res.send("Optimal Clothing API running"));
